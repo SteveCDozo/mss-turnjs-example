@@ -62,15 +62,34 @@
     <script src="js/jquery-popper-bootstrap.js"></script>
     <script src="js/turn.js"></script>
     <script type="text/javascript">
+      function disableControls(page) {
+        if (page==1)
+          $("#left-button").hide();
+        else
+          $("#left-button").show();
+              
+        if (page==$('#flipbook').turn('pages'))
+          $("#right-button").hide();
+        else
+          $("#right-button").show();
+      }
+
       $("#flipbook").turn({
         autoCenter:true,
-        acceleration: false
+        acceleration: false,
+        when: {
+          turning: function(event, page, view) {
+            disableControls(page);
+          },
+          turned: function(event, page, view) {
+            disableControls(page);
+          }
+        }
       });
-      $("left-button").click(function() {
+      $("#left-button").click(function() {
         $("#flipbook").turn("previous");
       });
-      $("right-button").click(function() {
-        console.log('hi');
+      $("#right-button").click(function() {
         $("#flipbook").turn("next");
       });
 

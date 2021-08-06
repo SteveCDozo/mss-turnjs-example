@@ -63,6 +63,11 @@
         else
           $("#right-button").css("visibility", "visible");
       }
+
+      // update book size when window resizes
+      $(window).resize(function() {
+        $("#flipbook").turn("size", "calc(85vh * 1.375)", "85vh");
+      });
     </script>
   </body>
 </html>

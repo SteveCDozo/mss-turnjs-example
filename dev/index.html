@@ -4,48 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>turnjs testing</title>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
-      rel="stylesheet">
-    <style>
-      #flipbookholder {
-        height: 1000px;
-        width: 1100px;
-        background-color: rgb(200, 204, 238);
-        overflow: hidden;
-        margin: 0 auto;
-        padding: 50px;
-      }
-      #flipbook{
-        width: 1100px;
-        height: 800px;
-      }
-      #flipbook .page img {
-        width: 100%;
-        height: 100%;
-      }
-      .shadow{
-        box-shadow: 0 4px 10px #666;
-      }
-      #left-button, #right-button {
-        position: absolute;
-        padding-top: 100px;
-      }
-      #left-button:hover, #right-button:hover {
-        cursor: pointer;
-      }
-      #left-button {
-        left: -30px;
-      }
-      #right-button {
-        right: -30px;
-      }
-    </style>
+    <title>MSS TurnJS Example</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">     
   </head>
   <body>
     <div id="flipbookholder">
-      <div id="flipbook">
-        <span id="left-button" ignore="1" class="material-icons-outlined left-button">chevron_left</span>
+      <span id="left-button" class="material-icons-outlined left-button">chevron_left</span>
+      <div id="flipbook">      
         <div><img src="pages/1.png"></div>
         <div><img src="pages/2.png"></div>
         <div><img src="pages/3.png"></div>
@@ -55,34 +21,23 @@
         <div><img src="pages/7.png"></div>
         <div><img src="pages/8.png"></div>
         <div><img src="pages/9.png"></div>
-        <span id="right-button" ignore="1" class="material-icons-outlined">chevron_right</span>
       </div>
+      <span id="right-button" class="material-icons-outlined">chevron_right</span>
     </div>
 
     <script src="js/jquery-popper-bootstrap.js"></script>
     <script src="js/turn.js"></script>
     <script type="text/javascript">
-      function disableControls(page) {
-        if (page==1)
-          $("#left-button").hide();
-        else
-          $("#left-button").show();
-              
-        if (page==$('#flipbook').turn('pages'))
-          $("#right-button").hide();
-        else
-          $("#right-button").show();
-      }
 
       $("#flipbook").turn({
         autoCenter:true,
         acceleration: false,
         when: {
           turning: function(event, page, view) {
-            disableControls(page);
+            updateNavButtons(page, view);
           },
           turned: function(event, page, view) {
-            disableControls(page);
+            updateNavButtons(page, view);
           }
         }
       });
@@ -92,9 +47,20 @@
       $("#right-button").click(function() {
         $("#flipbook").turn("next");
       });
-
-      // dont show left button on page 0
-      // dont show right button on last page
+      
+      function updateNavButtons(page, view) {
+        const lastPage = $('#flipbook').turn('pages');
+        
+        if (page == 1)
+          $("#left-button").hide();
+        else
+          $("#left-button").show();
+              
+        if (page == lastPage || (view.length == 2 && view[1] == lastPage))
+          $("#right-button").hide();
+        else
+          $("#right-button").show();
+      }
     </script>
   </body>
 </html>

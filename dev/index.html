@@ -29,6 +29,8 @@
     <script src="js/turn.js"></script>
     <script type="text/javascript">
 
+      $( "<div class='gradient'></div>" ).insertBefore( "img" );
+
       $("#flipbook").turn({
         autoCenter:true,
         acceleration: false,
@@ -57,9 +59,9 @@
           $("#left-button").show();
               
         if (page == lastPage || (view.length == 2 && view[1] == lastPage))
-          $("#right-button").hide();
+          $("#right-button").css("visibility", "hidden");
         else
-          $("#right-button").show();
+          $("#right-button").css("visibility", "visible");
       }
     </script>
   </body>

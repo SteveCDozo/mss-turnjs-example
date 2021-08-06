@@ -44,9 +44,16 @@
 
       $( "<div class='gradient'></div>" ).insertBefore( "img" );
 
+      let displayMode = $(window).width() > 600 ? "double" : "single";
+      let bookWidth = displayMode === "double" ? "calc(85vh * 1.375)" : "80vw";
+      let bookHeight = displayMode === "double" ? "85vh" : "calc(80vw / 0.6875)"
+
       $("#flipbook").turn({
         autoCenter:true,
         acceleration: false,
+        display: displayMode,
+        width: bookWidth,
+        height: bookHeight,
         when: {
           turning: function(event, page, view) {
             updateNavButtons(page, view);
@@ -77,21 +84,47 @@
           $("#right-button").css("visibility", "visible");
       }
 
+      function resizeBook() {
+        // update display mode, width, and height in case it changed
+        displayMode = $(window).width() > 600 ? "double" : "single";
+        bookWidth = displayMode === "double" ? "calc(85vh * 1.375)" : "80vw";
+        bookHeight = displayMode === "double" ? "85vh" : "calc(80vw / 0.6875)"
+        $("#flipbook").turn("size", bookWidth, bookHeight);
+      }
+
       // update book size when window resizes
-      $(window).resize(function() {
-        $("#flipbook").turn("size", "calc(85vh * 1.375)", "85vh");
+      $(window).resize(function() {        
+        resizeBook();        
       });
 
       const zoomIncrement = 50;
 
+      function zoomBook(direction) {
+        // direction 1 is zoom in, -1 is zoom out
+        let newHeight = $("#flipbook").height();
+        let newWidth =  $("#flipbook").width();
+
+        if (displayMode === "double") {
+
+          newHeight += direction == 1 ? zoomIncrement : -zoomIncrement;
+          newWidth = 1.375 * newHeight;
+
+        } else {
+
+          newWidth += direction == 1 ? zoomIncrement : -zoomIncrement;
+          newHeight = newWidth / 0.6875;
+
+        }
+        
+        $("#flipbook").turn("size", newWidth, newHeight);
+      }
+
       $("#zoom-in").click(function() {
-        const newHeight = $("#flipbook").height() + zoomIncrement;      
-        $("#flipbook").turn("size", 1.375 * newHeight, newHeight);
+        zoomBook(1);
       });
 
       $("#zoom-out").click(function() {
-        const newHeight = $("#flipbook").height() - zoomIncrement;      
-        $("#flipbook").turn("size", 1.375 * newHeight, newHeight);
+        zoomBook(-1);
       });
     </script>
   </body>

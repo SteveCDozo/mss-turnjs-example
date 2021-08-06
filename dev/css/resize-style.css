@@ -62,15 +62,17 @@
 .shadow {
   box-shadow: 0 4px 10px #666;
 }
-#left-button, #right-button {
-  cursor: pointer;
-  font-size: 50px;
+#flipbookholder button {
+  cursor: pointer;  
   color: gray;
-  display: flex;
-  align-items: center;
   padding: 0 20px;
+  border: none;
+  background-color: transparent;
 }
-#left-button:hover, #right-button:hover {
+#flipbookholder button span {
+  font-size: 50px;
+}
+#flipbookholder button:hover {
   color: black;
 }
 #flipbook .even .gradient{
@@ -100,4 +102,24 @@
   background-image:-ms-linear-gradient(right, rgba(0,0,0,0) 95%, rgba(0,0,0,0.15) 100%);
   background-image:-o-linear-gradient(right, rgba(0,0,0,0) 95%, rgba(0,0,0,0.15) 100%);
   background-image:linear-gradient(right, rgba(0,0,0,0) 95%, rgba(0,0,0,0.15) 100%);
+}
+
+#mobile-nav {
+  display: none;
+}
+
+@media only screen and (max-width: 600px) {
+  #flipbookholder button {
+    display: none;
+  }
+  #mobile-nav {
+		display: flex;
+    justify-content: center;
+    gap: 20px;
+	}
+  #mobile-nav button {
+    padding: 10px 20px;
+    border: 1px solid gray;
+    background-color: transparent;
+  }  
 }

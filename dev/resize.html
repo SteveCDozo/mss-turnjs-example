@@ -9,6 +9,19 @@
     <link href="css/resize-style.css" rel="stylesheet">     
   </head>
   <body>
+    <div id="options">
+      <div id="zoom-control">
+        <button id="zoom-out">
+          <span class="material-icons-outlined">remove</span>
+        </button>
+        <span>Zoom</span>
+        <button id="zoom-in">
+          <span class="material-icons-outlined">add</span>
+        </button>
+      </div>
+      <a class="option-button" target="_blank" href="pdf/Mr_Jorrock's_Vesta_Cases.pdf">View as PDF</a>
+    </div>    
+    
     <div id="flipbookholder">
       <span id="left-button" class="material-icons-outlined left-button">chevron_left</span>
       <div id="flipbook">      
@@ -67,6 +80,18 @@
       // update book size when window resizes
       $(window).resize(function() {
         $("#flipbook").turn("size", "calc(85vh * 1.375)", "85vh");
+      });
+
+      const zoomIncrement = 50;
+
+      $("#zoom-in").click(function() {
+        const newHeight = $("#flipbook").height() + zoomIncrement;      
+        $("#flipbook").turn("size", 1.375 * newHeight, newHeight);
+      });
+
+      $("#zoom-out").click(function() {
+        const newHeight = $("#flipbook").height() - zoomIncrement;      
+        $("#flipbook").turn("size", 1.375 * newHeight, newHeight);
       });
     </script>
   </body>

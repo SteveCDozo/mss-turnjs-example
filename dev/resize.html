@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>MSS TurnJS Example</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <link href="css/resize-style.css" rel="stylesheet">     
+  </head>
+  <body>
+    <div id="flipbookholder">
+      <span id="left-button" class="material-icons-outlined left-button">chevron_left</span>
+      <div id="flipbook">      
+        <div><img src="pages/1.png"></div>
+        <div><img src="pages/2.png"></div>
+        <div><img src="pages/3.png"></div>
+        <div><img src="pages/4.png"></div>
+        <div><img src="pages/5.png"></div>
+        <div><img src="pages/6.png"></div>
+        <div><img src="pages/7.png"></div>
+        <div><img src="pages/8.png"></div>
+        <div><img src="pages/9.png"></div>
+      </div>
+      <span id="right-button" class="material-icons-outlined">chevron_right</span>
+    </div>
+
+    <script src="js/jquery-popper-bootstrap.js"></script>
+    <script src="js/turn.js"></script>
+    <script type="text/javascript">
+
+      $( "<div class='gradient'></div>" ).insertBefore( "img" );
+
+      $("#flipbook").turn({
+        autoCenter:true,
+        acceleration: false,
+        when: {
+          turning: function(event, page, view) {
+            updateNavButtons(page, view);
+          },
+          turned: function(event, page, view) {
+            updateNavButtons(page, view);
+          }
+        }
+      });
+      $("#left-button").click(function() {
+        $("#flipbook").turn("previous");
+      });
+      $("#right-button").click(function() {
+        $("#flipbook").turn("next");
+      });
+      
+      function updateNavButtons(page, view) {
+        const lastPage = $('#flipbook').turn('pages');
+        
+        if (page == 1)
+          $("#left-button").hide();
+        else
+          $("#left-button").show();
+              
+        if (page == lastPage || (view.length == 2 && view[1] == lastPage))
+          $("#right-button").css("visibility", "hidden");
+        else
+          $("#right-button").css("visibility", "visible");
+      }
+    </script>
+  </body>
+</html>

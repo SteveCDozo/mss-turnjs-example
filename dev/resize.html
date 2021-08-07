@@ -58,10 +58,32 @@
       $( "<div class='gradient'></div>" ).insertBefore( "img" );
 
       let displayMode = $(window).width() > 600 ? "double" : "single";
-      let bookWidth = displayMode === "double" ? "calc(85vh * 1.375)" : "80vw";
-      let bookHeight = displayMode === "double" ? "85vh" : "calc(80vw / 0.6875)"
 
-      $("#flipbook").turn({
+      const singleModeWidth  = "80vw";
+      const singleModeHeight = "calc(80vw / 0.6875)";
+
+      const doubleModeWidth  = "calc(85vh * 1.375)";
+      const doubleModeHeight = "85vh";
+
+      let bookWidth  = 0;
+      let bookHeight = 0;
+
+      function updateBookDimensions() {
+        bookWidth  = displayMode === "double" ? doubleModeWidth  : singleModeWidth;
+        bookHeight = displayMode === "double" ? doubleModeHeight : singleModeHeight;
+      }
+
+      updateBookDimensions();
+
+      const flipbook = $("#flipbook");
+
+      const leftBtnDesktop  = $("#flipbookholder .left-button");
+      const rightBtnDesktop = $("#flipbookholder .right-button");
+
+      const leftBtnMobile  = $("#mobile-nav .left-button");
+      const rightBtnMobile = $("#mobile-nav .right-button");     
+
+      flipbook.turn({
         acceleration: false,
         display: displayMode,
         width: bookWidth,
@@ -69,43 +91,50 @@
         when: {
           turning: function(event, page, view) {
             updateNavButtons(page, view);
+            autoCenter(page);
           },
           turned: function(event, page, view) {
             updateNavButtons(page, view);
+            autoCenter(page);
           }
         }
-      });
+      });      
+
       $(".left-button").click(function() {
-        $("#flipbook").turn("previous");
+        flipbook.turn("previous");
       });
       $(".right-button").click(function() {
-        $("#flipbook").turn("next");
+        flipbook.turn("next");
       });
 
-      function autoCenter() {
-        const newMargin = $("#flipbook").turn('size').width / 2;
-        $("#flipbook").css("margin-left", "-"+newMargin+"px");
+      // custom autocentering for use with display flex
+      function autoCenter(currentPage) {
+        // don't need to autocenter on mobile view
+        if (displayMode === "single") return;
+
+        if (currentPage == 1) {
+          const newMargin = flipbook.turn('size').width / 2;
+          flipbook.css("margin-left", "-"+newMargin+"px");
+        } else if (currentPage == 2) {
+          // reset the left margin when we get to page 2
+          flipbook.css("margin-left", "0px");
+        }
       }
-      
+
       function updateNavButtons(page, view) {
-        const lastPage = $('#flipbook').turn('pages');
-        const leftBtn = displayMode === 'double' ? 
-          $("#flipbookholder .left-button") : $("#mobile-nav .left-button");
-        const rightBtn = displayMode === 'double' ?
-          $("#flipbookholder .right-button") : $("#mobile-nav .right-button");
+        const lastPage = flipbook.turn('pages');
+                
+        const leftBtn = displayMode === 'double' ? leftBtnDesktop : leftBtnMobile;
+        const rightBtn = displayMode === 'double' ? rightBtnDesktop : rightBtnMobile;
         
         if (page == 1) {
           if (displayMode === "double") {
-            leftBtn.css("visibility", "hidden");
-            // custon autocentering
-            autoCenter();
+            leftBtn.css("visibility", "hidden");            
           } else
             leftBtn.hide();
         } else {
           if (displayMode === "double") {
             leftBtn.css("visibility", "visible");
-            // custon autocentering
-            $("#flipbook").css("margin-left", "0px");
           } else
             leftBtn.show();
         }
@@ -126,11 +155,9 @@
       function resizeBook() {
         // update display mode, width, and height in case it changed
         displayMode = $(window).width() > 600 ? "double" : "single";
-        bookWidth = displayMode === "double" ? "calc(85vh * 1.375)" : "80vw";
-        bookHeight = displayMode === "double" ? "85vh" : "calc(80vw / 0.6875)"
-        $("#flipbook").turn("size", bookWidth, bookHeight);
-        if($("#flipbook").turn('page')==1)
-          autoCenter();
+        updateBookDimensions();
+        flipbook.turn("size", bookWidth, bookHeight);
+        autoCenter(flipbook.turn("page"));
       }
 
       // update book size when window resizes
@@ -142,8 +169,8 @@
 
       function zoomBook(direction) {
         // direction 1 is zoom in, -1 is zoom out
-        let newHeight = $("#flipbook").height();
-        let newWidth =  $("#flipbook").width();
+        let newHeight = flipbook.height();
+        let newWidth =  flipbook.width();
 
         if (displayMode === "double") {
 
@@ -157,7 +184,7 @@
 
         }
         
-        $("#flipbook").turn("size", newWidth, newHeight);
+        flipbook.turn("size", newWidth, newHeight);
       }
 
       $("#zoom-in").click(function() {

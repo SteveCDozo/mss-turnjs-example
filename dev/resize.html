@@ -62,7 +62,7 @@
       let bookHeight = displayMode === "double" ? "85vh" : "calc(80vw / 0.6875)"
 
       $("#flipbook").turn({
-        autoCenter:true,
+        autoCenter: true,
         acceleration: false,
         display: displayMode,
         width: bookWidth,
@@ -90,10 +90,17 @@
         const rightBtn = displayMode === 'double' ?
           $("#flipbookholder .right-button") : $("#mobile-nav .right-button");
         
-        if (page == 1)
-          leftBtn.hide();
-        else
-          leftBtn.show();
+        if (page == 1) {
+          if (displayMode === "double")
+            leftBtn.css("visibility", "hidden");
+          else
+            leftBtn.hide();
+        } else {
+          if (displayMode === "double")
+            leftBtn.css("visibility", "visible");
+          else
+            leftBtn.show();
+        }
               
         if (page == lastPage || (view.length == 2 && view[1] == lastPage)) {
           if (displayMode === "double")

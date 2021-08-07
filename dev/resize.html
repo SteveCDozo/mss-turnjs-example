@@ -110,7 +110,10 @@
       // custom autocentering for use with display flex
       function autoCenter(currentPage) {
         // don't need to autocenter on mobile view
-        if (displayMode === "single") return;
+        if (displayMode === "single") {
+          flipbook.css("margin-left", "0px");
+          return;
+        }
 
         if (currentPage == 1) {
           const newMargin = flipbook.turn('size').width / 2;
@@ -155,6 +158,7 @@
       function resizeBook() {
         // update display mode, width, and height in case it changed
         displayMode = $(window).width() > 600 ? "double" : "single";
+        flipbook.turn("display", displayMode);        
         updateBookDimensions();
         flipbook.turn("size", bookWidth, bookHeight);
         autoCenter(flipbook.turn("page"));

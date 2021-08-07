@@ -62,7 +62,6 @@
       let bookHeight = displayMode === "double" ? "85vh" : "calc(80vw / 0.6875)"
 
       $("#flipbook").turn({
-        autoCenter: true,
         acceleration: false,
         display: displayMode,
         width: bookWidth,
@@ -82,6 +81,11 @@
       $(".right-button").click(function() {
         $("#flipbook").turn("next");
       });
+
+      function autoCenter() {
+        const newMargin = $("#flipbook").turn('size').width / 2;
+        $("#flipbook").css("margin-left", "-"+newMargin+"px");
+      }
       
       function updateNavButtons(page, view) {
         const lastPage = $('#flipbook').turn('pages');
@@ -91,14 +95,18 @@
           $("#flipbookholder .right-button") : $("#mobile-nav .right-button");
         
         if (page == 1) {
-          if (displayMode === "double")
+          if (displayMode === "double") {
             leftBtn.css("visibility", "hidden");
-          else
+            // custon autocentering
+            autoCenter();
+          } else
             leftBtn.hide();
         } else {
-          if (displayMode === "double")
+          if (displayMode === "double") {
             leftBtn.css("visibility", "visible");
-          else
+            // custon autocentering
+            $("#flipbook").css("margin-left", "0px");
+          } else
             leftBtn.show();
         }
               
@@ -121,6 +129,8 @@
         bookWidth = displayMode === "double" ? "calc(85vh * 1.375)" : "80vw";
         bookHeight = displayMode === "double" ? "85vh" : "calc(80vw / 0.6875)"
         $("#flipbook").turn("size", bookWidth, bookHeight);
+        if($("#flipbook").turn('page')==1)
+          autoCenter();
       }
 
       // update book size when window resizes
